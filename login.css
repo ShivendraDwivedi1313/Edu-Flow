@@ -240,7 +240,6 @@ input:focus ~ .icon {
     color: #00a8ff;
 }
 
-/* Add password strength indicator */
 .password-strength {
     margin-top: 5px;
     font-size: 0.9rem;
@@ -251,7 +250,6 @@ input:focus ~ .icon {
     transition: all 0.3s ease;
 }
 
-/* Add to login.css */
 .branch-select {
     width: 100%;
     padding: 15px 15px 15px 45px;
@@ -273,7 +271,6 @@ input:focus ~ .icon {
     box-shadow: 0 5px 15px rgba(107,72,255,0.1);
 }
 
-/* Custom select arrow */
 .input-group.select-group::after {
     content: "\f078";
     font-family: "Font Awesome 5 Free";
