@@ -1,0 +1,295 @@
+* {
+    box-sizing: border-box; 
+}
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.login-container {
+    display: flex;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    width: 800px;
+    height: 80vh;
+    min-height: 600px; 
+    max-height: 800px; 
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+    position: relative; 
+}
+
+.login-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.login-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+
+.login-container::-webkit-scrollbar-thumb {
+    background: #6b48ff;
+    border-radius: 3px;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+}
+
+.left-panel {
+    flex: 1;
+    background: linear-gradient(160deg, #6b48ff 0%, #00a8ff 100%);
+    border-radius: 20px 0 0 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-wrapper {
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.image-wrapper:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.fa-laptop-code {
+    color: rgba(255,255,255,0.9);
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+}
+
+.shape {
+    position: absolute;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+}
+
+.shape-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    top: -50px;
+    left: -50px;
+    animation: float 6s infinite;
+}
+
+.shape-triangle {
+    width: 0;
+    height: 0;
+    border-left: 75px solid transparent;
+    border-right: 75px solid transparent;
+    border-bottom: 130px solid rgba(255,255,255,0.1);
+    bottom: -80px;
+    right: -50px;
+    animation: float 8s infinite;
+}
+
+.right-panel {
+    flex: 1;
+    display: flex;
+    padding: 20px 30px;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+@media (max-width: 768px) {
+    .login-container {
+        height: auto;
+        min-height: 80vh;
+        margin: 10px;
+    }
+    
+    .left-panel {
+        padding: 20px 0;
+    }
+    
+    .right-panel {
+        padding: 15px;
+    }
+    
+    .input-group {
+        margin-bottom: 15px;
+    }
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 25px;
+    transition: transform 0.3s ease;
+    width: calc(100% - 30px); /* Account for hover translation */
+    margin-left: 15px;
+}
+
+.input-group:hover {
+    transform: translateX(10px);
+}
+
+.icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b48ff;
+    transition: color 0.3s ease;
+}
+
+input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #6b48ff;
+    box-shadow: 0 5px 15px rgba(107,72,255,0.1);
+}
+
+input:focus ~ .icon {
+    color: #00a8ff;
+}
+
+.login-button {
+    background: linear-gradient(135deg, #6b48ff 0%, #00a8ff 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(107,72,255,0.2);
+}
+
+.forgot-password {
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #6b48ff;
+}
+
+.create-account {
+    color: #6b48ff;
+    text-align: center;
+    margin-top: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.create-account:hover {
+    letter-spacing: 1px;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Add to login.css */
+.fa-user-plus {
+    color: rgba(255,255,255,0.9);
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+}
+
+.create_account {
+    color: #6b48ff;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.create_account:hover {
+    letter-spacing: 1px;
+    color: #00a8ff;
+}
+
+/* Add password strength indicator */
+.password-strength {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.password-strength span {
+    transition: all 0.3s ease;
+}
+
+/* Add to login.css */
+.branch-select {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    appearance: none;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.branch-select:hover {
+    border-color: #6b48ff;
+}
+
+.branch-select:focus {
+    outline: none;
+    border-color: #6b48ff;
+    box-shadow: 0 5px 15px rgba(107,72,255,0.1);
+}
+
+/* Custom select arrow */
+.input-group.select-group::after {
+    content: "\f078";
+    font-family: "Font Awesome 5 Free";
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b48ff;
+    pointer-events: none;
+}
+
+.fa-university {
+    color: #6b48ff;
+    z-index: 2;
+}
+
+.fa-id-card {
+    color: #6b48ff;
+}

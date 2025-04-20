@@ -1,0 +1,31 @@
+/* Add to login.css */
+.fa-user-plus {
+    color: rgba(255,255,255,0.9);
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+}
+
+.create-account {
+    color: #6b48ff;
+    text-align: center;
+    margin-top: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.create-account:hover {
+    letter-spacing: 1px;
+    color: #00a8ff;
+}
+
+/* Add password strength indicator */
+.password-strength {
+    margin-top: 5px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.password-strength span {
+    transition: all 0.3s ease;
+}

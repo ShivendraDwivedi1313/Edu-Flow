@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <style>
+    :root {
+      --primary-color: #007aff;
+      --background: #f5f5f7;
+      --card-bg: #ffffff;
+      --text-color: #1c1c1e;
+      --border-radius: 16px;
+      --transition: all 0.3s ease-in-out;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--text-color);
+      display: flex;
+    }
+
+    header {
+      background: var(--primary-color);
+      color: white;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #fff;
+      height: 100vh;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 2;
+    }
+
+    .sidebar button {
+      padding: 14px 20px;
+      font-size: 16px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      border-radius: var(--border-radius);
+      margin: 6px 10px;
+      color: var(--text-color);
+      transition: var(--transition);
+    }
+
+    .sidebar button.active, .sidebar button:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .section {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 5px 0 15px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      margin-bottom: 20px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn {
+      padding: 8px 16px;
+      margin: 6px 4px 0 0;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-add {
+      background: #34c759;
+      color: white;
+    }
+
+    .btn-minus {
+      background: #ff3b30;
+      color: white;
+    }
+
+    .subject-time {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .subject-time input {
+      flex: 1;
+    }
+
+    h2, h3, h4 {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <button class="active" onclick="showSection('timetable')">📅 Timetable</button>
+    <button onclick="showSection('attendance')">📊 Attendance</button>
+    <button onclick="showSection('results')">📄 Results</button>
+    <button onclick="showSection('documents')">🤖 Chatbot</button>
+  </div>
+  <div class="main-content">
+    <header>📘 Student Dashboard</header>
+    <div id="timetable" class="section active"></div>
+    <div id="attendance" class="section"></div>
+    <div id="results" class="section"></div>
+    <div id="documents" class="section"></div>
+  </div>
+
+  <script>
+    const sections = ['timetable', 'attendance', 'results', 'documents'];
+    const data = JSON.parse(localStorage.getItem('student_dashboard')) || {
+      timetable: {}, attendance: {}, results: {}, documents: {}
+    };
+
+    function showSection(id) {
+      sections.forEach(section => {
+        document.getElementById(section).classList.remove('active');
+        document.querySelector(`.sidebar button:nth-child(${sections.indexOf(section)+1})`).classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`.sidebar button:nth-child(${sections.indexOf(id)+1})`).classList.add('active');
+    }
+
+    function saveData() {
+      localStorage.setItem('student_dashboard', JSON.stringify(data));
+    }
+
+    function renderTimetable() {
+      const container = document.getElementById('timetable');
+      container.innerHTML = '<h2>📅 Weekly Timetable</h2>';
+      const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+      days.forEach(day => {
+        const subjects = data.timetable[day] || [];
+
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const title = document.createElement('h3');
+        title.textContent = day;
+        card.appendChild(title);
+
+        subjects.forEach((entry, index) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'subject-time';
+          const subjInput = document.createElement('input');
+          subjInput.type = 'text';
+          subjInput.value = entry.subject;
+          const timeInput = document.createElement('input');
+          timeInput.type = 'text';
+          timeInput.value = entry.time;
+
+          subjInput.addEventListener('input', () => {
+            entry.subject = subjInput.value;
+            saveData();
+          });
+          timeInput.addEventListener('input', () => {
+            entry.time = timeInput.value;
+            saveData();
+          });
+
+          wrapper.appendChild(subjInput);
+          wrapper.appendChild(timeInput);
+          card.appendChild(wrapper);
+        });
+
+        const addBtn = document.createElement('button');
+        addBtn.textContent = '+ Add Class';
+        addBtn.className = 'btn btn-add';
+        addBtn.addEventListener('click', () => {
+          subjects.push({ subject: '', time: '' });
+          data.timetable[day] = subjects;
+          saveData();
+          renderTimetable();
+        });
+        card.appendChild(addBtn);
+
+        container.appendChild(card);
+      });
+    }
+
+    function renderAttendance() {
+      const container = document.getElementById('attendance');
+      container.innerHTML = '<h2>📊 Attendance Tracker</h2>';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Add subject';
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          data.attendance[input.value] = { attended: 0, missed: 0 };
+          input.value = '';
+          saveData();
+          renderAttendance();
+        }
+      });
+      container.appendChild(input);
+
+      let totalAttended = 0, totalClasses = 0;
+
+      Object.entries(data.attendance).forEach(([subject, record]) => {
+        totalAttended += record.attended;
+        totalClasses += record.attended + record.missed;
+        const percent = record.attended + record.missed > 0 ? ((record.attended / (record.attended + record.missed)) * 100).toFixed(1) : 0;
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<h3>${subject} - ${percent}%</h3>
+          <div>
+            <button class="btn btn-add" onclick="data.attendance['${subject}'].attended++; saveData(); renderAttendance();">+ Attended</button>
+            <button class="btn btn-minus" onclick="data.attendance['${subject}'].missed++; saveData(); renderAttendance();">+ Missed</button>
+          </div>
+          <div>Attended: ${record.attended} | Missed: ${record.missed}</div>`;
+        container.appendChild(card);
+      });
+
+      const overall = totalClasses > 0 ? ((totalAttended / totalClasses) * 100).toFixed(1) : 0;
+      const overallEl = document.createElement('div');
+      overallEl.innerHTML = `<h4 style="margin-top:20px;">📈 Overall Attendance: ${overall}%</h4>`;
+      container.appendChild(overallEl);
+    }
+
+    function renderResults() {
+      const container = document.getElementById('results');
+      container.innerHTML = '<h2>📄 Semester Results</h2>';
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.placeholder = 'Add semester';
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          data.results[input.value] = '';
+          input.value = '';
+          saveData();
+          renderResults();
+        }
+      });
+      container.appendChild(input);
+
+      Object.entries(data.results).forEach(([sem, result]) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `<h3>${sem}</h3>
+          <textarea rows="2">${result}</textarea>`;
+        const textarea = card.querySelector('textarea');
+        textarea.addEventListener('change', () => {
+          data.results[sem] = textarea.value;
+          saveData();
+        });
+        container.appendChild(card);
+      });
+    }
+
+    function renderChatbot() {
+      const container = document.getElementById('documents');
+      container.innerHTML = '<h2>🤖 Ask StudyBot</h2>';
+
+      const chatBox = document.createElement('div');
+      chatBox.style.maxHeight = '400px';
+      chatBox.style.overflowY = 'auto';
+      chatBox.style.marginBottom = '20px';
+      chatBox.style.border = '1px solid #ddd';
+      chatBox.style.padding = '10px';
+      chatBox.style.borderRadius = 'var(--border-radius)';
+      chatBox.style.background = '#fff';
+
+      const chatInput = document.createElement('input');
+      chatInput.type = 'text';
+      chatInput.placeholder = 'Ask me anything...';
+      chatInput.style.flex = '1';
+
+      const sendBtn = document.createElement('button');
+      sendBtn.textContent = 'Send';
+      sendBtn.className = 'btn btn-add';
+
+      const form = document.createElement('div');
+      form.style.display = 'flex';
+      form.style.gap = '10px';
+      form.appendChild(chatInput);
+      form.appendChild(sendBtn);
+
+      container.appendChild(chatBox);
+      container.appendChild(form);
+
+      function appendMessage(role, text) {
+        const msg = document.createElement('div');
+        msg.style.margin = '8px 0';
+        msg.style.padding = '10px';
+        msg.style.borderRadius = '10px';
+        msg.style.whiteSpace = 'pre-wrap';
+        msg.style.background = role === 'user' ? '#007aff20' : '#34c75920';
+        msg.textContent = text;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const question = chatInput.value.trim();
+        if (!question) return;
+
+        appendMessage('user', question);
+        chatInput.value = '';
+        chatInput.disabled = true;
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = 'Sending <span class="loading"></span>';
+
+        try {
+          // IMPORTANT: In production, replace this with a call to your backend
+          // Never expose API keys in frontend code
+          const API_KEY = "AIzaSyDorXjwPlLL1rooWZzCroT6i0dFZHb7w9A"; // Replace with your actual API key
+          const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+          
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{ text: question }]
+              }],
+              safetySettings: [{
+                category: "HARM_CATEGORY_DANGEROUS_CONTENT",
+                threshold: "BLOCK_ONLY_HIGH"
+              }],
+              generationConfig: {
+                temperature: 0.9,
+                topP: 1,
+                topK: 1,
+                maxOutputTokens: 2048
+              }
+            })
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error?.message || `API Error: ${response.status}`);
+          }
+
+          const responseData = await response.json();
+          const reply = responseData.candidates?.[0]?.content?.parts?.[0]?.text || 
+                       "Sorry, I couldn't understand that. Please try again.";
+          
+          appendMessage('assistant', reply);
+
+        } catch (error) {
+          console.error('Chat error:', error);
+          appendMessage('assistant', `Error: ${error.message}`);
+        } finally {
+          chatInput.disabled = false;
+          sendBtn.disabled = false;
+          sendBtn.textContent = 'Send';
+          chatInput.focus();
+        }
+      }
+
+      sendBtn.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keydown', e => e.key === 'Enter' && sendMessage());
+    }
+
+    // Initialize all components
+    renderTimetable();
+    renderAttendance();
+    renderResults();
+    renderChatbot();
+  </script>
+</body>
+</html>
