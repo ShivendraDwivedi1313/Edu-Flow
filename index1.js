@@ -1,4 +1,4 @@
-// index.js
+
 function showCredentials(role) {
     const credentials = document.getElementById('credentials');
     const loginBtn = document.querySelector('.login-btn');
